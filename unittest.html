@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.9.2.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.9.2.js"></script>
+    <script src="./js/view.js"></script>
+    <script src="./js/model.js"></script>
+    <script src="./js/controller.js"></script>
+
+</head>
+
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <div id="board"></div>
+        <div id="dice"></div>
+        <div id="message"></div>
+    </div>
+
+
+
+    <script>
+
+        QUnit.test("Cell 90 = finished", function (assert) {
+            const cellNumber = 90;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = 'finish';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Cell 1 = ladderStartUp", function (assert) {
+            const cellNumber = 1;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = 'ladderStartUp';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Cell 40 = ladderEndUp", function (assert) {
+            const cellNumber = 40;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = 'ladderEndUp';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Cell 3 = ladderStartDown", function (assert) {
+            const cellNumber = 24;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = 'ladderStartDown';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Cell 3 = ladderEndDown", function (assert) {
+            const cellNumber = 3;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = 'ladderEndDown';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Cell 25 = ''", function (assert) {
+            const cellNumber = 25;
+            const actual = getCssClassForCell(cellNumber);
+            const expected = '';
+            assert.equal(actual, expected);
+        });
+
+        QUnit.test("Roll dice", function (assert) {
+            model.canRollDice = true;
+            handleRollDice(3);
+            assert.equal(model.diceValue, 3, "Dice value should be 3 after rolling a 3.");
+            assert.ok(!model.canRollDice, "Should not be able to roll dice again without moving player.");
+            assert.ok(model.canMovePlayer, "Should be able to move player after rolling dice.");
+        });
+
+
+        QUnit.test("Sequence of dice rolls that does not result in a win", function (assert) {
+            const diceRolls = [1, 5, 3, 4, 4];
+            model.currentPlayerIndex = 0;
+            model.canMovePlayer = false;
+
+            for (let i = 0; i < diceRolls.length; i++) {
+                handleRollDice(diceRolls[i]);
+                handleMovePlayer();
+            }
+
+            assert.notEqual(model.players[model.currentPlayerIndex].position, 90, "Player should not win after the sequence of dice rolls.");
+        });
+
+        QUnit.test("Sequence of dice rolls [1, 3, 3, 4, 4] results in a win", function (assert) {
+            const diceRolls = [1, 3, 3, 4, 4];
+            model.currentPlayerIndex = 0;
+            model.canMovePlayer = false;
+
+            for (let i = 0; i < diceRolls.length; i++) {
+                handleRollDice(diceRolls[i]);
+                handleMovePlayer();
+            }
+
+            assert.ok(model.players[model.currentPlayerIndex].position >= 90, "Player should win after the sequence of dice rolls.");
+        });
+
+
+
+    </script>
+</body>
+
+</html>
