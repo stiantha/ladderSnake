@@ -9,7 +9,7 @@ function createPlayerSelectionButtons() {
         button.classList.add('playerSelection');
         button.textContent = `${i} Player(s)`;
         button.addEventListener('click', () => {
-            buttonContainer.innerHTML = ''; // Clear the buttonContainer's innerHTML to remove the buttons
+            buttonContainer.innerHTML = '';
             initializePlayers(i);
             drawBoard();
             createControls();
